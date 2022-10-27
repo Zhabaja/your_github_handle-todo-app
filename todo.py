@@ -22,10 +22,13 @@ def list_tasks():
                 task_num += 1
 
 
-def add_new_task(task):
-    with open("list_of_tasks.txt", "a") as fobj:
-        fobj.write('\n' + task)
-        sys.stdout.write(f'New task: {task} has been added')
+def add_new_task(task=''):
+    if task == '':
+        sys.stderr.write('Unable to add: no task provided')
+    else:
+        with open("list_of_tasks.txt", "a") as fobj:
+            fobj.write('\n' + str(task))
+            sys.stdout.write(f'New task: {task} has been added')
 
 
 if __name__ == '__main__':
@@ -37,4 +40,9 @@ if __name__ == '__main__':
         list_tasks()
 
     elif args[1] == '-a':
-        add_new_task(args[2])
+        try:
+            add_new_task(args[2])
+
+        except IndexError:
+            add_new_task()
+
