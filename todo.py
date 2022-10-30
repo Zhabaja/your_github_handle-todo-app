@@ -27,8 +27,12 @@ def add_new_task(task=''):
         sys.stderr.write('Unable to add: no task provided')
     else:
         with open("list_of_tasks.txt", "a") as fobj:
-            fobj.write('\n' + str(task))
-            sys.stdout.write(f'New task: {task} has been added')
+            if len(task_list()) == 0:
+                fobj.write(f'[ ] {str(task)}')
+                sys.stdout.write(f'New task: {task} has been added')
+            else:
+                fobj.write(f'\n[ ] {str(task)}')
+                sys.stdout.write(f'New task: {task} has been added')
 
 
 # saves the tasks in the list_of_tasks.txt file into a list variable
@@ -47,9 +51,19 @@ def remove_task(index=0):
             fobj.write(task)
 
 
+def check_task(index):
+    task_ls = task_list()
+    sys.stdout.write(f'Task: {task_ls[index - 1]} has been checked.')
+    checked_task = f'[X{task_ls[index - 1][2:]}'
+    task_ls[index - 1] = checked_task
+    with open("list_of_tasks.txt", "w") as fobj:
+        for task in task_ls:
+            fobj.write(task)
+
+
 if __name__ == '__main__':
     args = sys.argv
-    valid_args = ['-l', '-a', '-r', 'c']
+    valid_args = ['-l', '-a', '-r', '-c']
 
     if len(args) == 1:
         print_usage()
@@ -71,6 +85,17 @@ if __name__ == '__main__':
     elif args[1] == '-r':
         try:
             remove_task(int(args[2]))
+        except ValueError:
+            sys.stderr.write("Unable to remove: index is not a number")
+        except IndexError:
+            if len(args) < 3:
+                sys.stderr.write('Unable to remove: no index provided')
+            elif int(args[2]) - 1 > len(task_list()):
+                sys.stderr.write('Unable to remove: index is out of bound')
+
+    elif args[1] == '-c':
+        try:
+            check_task(int(args[2]))
         except ValueError:
             sys.stderr.write("Unable to remove: index is not a number")
         except IndexError:

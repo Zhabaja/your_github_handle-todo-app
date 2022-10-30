@@ -1,1 +1,4 @@
-Walk the dog
+[ ] Feed the cat
+[ ] Wash dishes
+[ ] Excercise
+[ ] Make lunch
